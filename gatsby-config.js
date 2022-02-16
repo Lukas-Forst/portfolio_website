@@ -1,6 +1,16 @@
 module.exports = {
     siteMetadata: {
       title: "My Super Cool Blog",
+      menuLinks:[
+              {
+                 name:'home',
+                 link:'/'
+              },
+              {
+                 name:'page2',
+                 link:'/page-2'
+              }
+            ]
     },
     plugins: [
       "gatsby-plugin-image",
@@ -15,5 +25,8 @@ module.exports = {
       "gatsby-plugin-mdx",
       "gatsby-transformer-sharp",
       "gatsby-plugin-postcss",
+      "gatsby-plugin-react-helmet",
+      `gatsby-plugin-fontawesome-css`,
+      
     ],
   };

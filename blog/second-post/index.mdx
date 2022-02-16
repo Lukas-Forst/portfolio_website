@@ -1,10 +1,198 @@
 ---
-title: "Another Post"
-date: "2021-07-24"
-hero_image: "./leon-rohrwild.jpg"
-hero_image_alt: "Road with curves"
-hero_image_credit_text: "Leon Rohrwild"
-hero_image_credit_link: "https://unsplash.com/photos/76AhGaxDVWI"
+title: "A simple approach creating a dog breed classifier with ResNet"
+date: "2020-04-22"
+hero_image: "https://miro.medium.com/max/1400/0*e5RzjyuUEO6oypRu"
+hero_image_alt: "sad looking Pug inside a blanket"
+hero_image_credit_text: "Matthew Henry"
+hero_image_credit_link: "https://unsplash.com/@matthewhenry?utm_source=medium&utm_medium=referral"
 ---
+<br/><br/>
+<br/><br/>
+<br/><br/>
 
-Here's another post! It's even better than the first one!
+[![Lukas](https://miro.medium.com/fit/c/96/96/1*oLpRXB8pWx5_bD3b83Wp0Q.jpeg)](https://medium.com/@lukas.forst?source=post_page-----2b39795cd58a-----------------------------------)
+
+[Lukas](https://medium.com/@lukas.forst?source=post_page-----2b39795cd58a-----------------------------------) ·[Follow](https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fsubscribe%2Fuser%2Fa0ea51504922&operation=register&redirect=https%3A%2F%2Fmedium.com%2F%40lukas.forst%2Fa-simple-approach-creating-a-dog-breed-classifier-with-resnet-2b39795cd58a&user=Lukas&userId=a0ea51504922&source=post_page-a0ea51504922----2b39795cd58a---------------------follow_sidebar--------------)
+
+
+
+·5 min read
+
+A simple approach creating a dog breed classifier with ResNet
+=============================================================
+
+![](https://miro.medium.com/max/1400/0*e5RzjyuUEO6oypRu)Photo by [Matthew Henry](https://unsplash.com/@matthewhenry?utm_source=medium&utm_medium=referral) on [Unsplash](https://unsplash.com?utm_source=medium&utm_medium=referral)
+
+> “The dog is a gentleman; I hope to go to his heaven not mans.” — Mark Twain
+
+There are many different dog breeds and for some people, it’s hard to differentiate between for example an [Alaskan Malamute vs. Siberian Husky](https://www.akc.org/expert-advice/lifestyle/dog-breed-look-alikes/). With over 340 different breeds recognized by the [**Fédération Cynologique Internationale**](https://www.quora.com/How-many-breeds-of-dogs-exist)**.**
+
+![](https://miro.medium.com/max/1200/0*wnPL28Kz-CRb0llx.jpg)[Alaskan Malamute vs. Siberian Huskey](http://cdn.akc.org/content/article-body-image/malamutehusky.jpg)
+
+That's why we want to use deep learning to create a classifier that will help us with this task. For that, we will use [Convolutional Neural Networks](https://cs231n.github.io/convolutional-networks/#overview) or short for CNN which are very similar to standard Neural Networks. A CNN makes the assumption that the input is an Image and that certain aspects of that image will be encoded by the architecture of our Neural Network.
+
+Besides creating a dog classifier in this project, we will also use the created Classification to classify human faces and their look-alike dog breed. We will structure this approach into X simple Steps.
+
+Step 1: Downloading and Importing the Dataset.
+----------------------------------------------
+
+The [first dataset](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/lfw.zip) consists of 13233 human images.
+
+The [second dataset](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/dogImages.zip) consists of 8351 dog images.
+
+After downloading and unzipping the datasets into your data folder we will create a function to load the dataset and create a train, valid and test files + target.
+
+```
+def load\_dataset(path):  
+    data = load\_files(path)  
+    dog\_files = np.array(data\['filenames'\])  
+    dog\_targets = np\_utils.to\_categorical(np.array(data\['target'\]), 133)  
+    return dog\_files, dog\_targets\# load train, test, and validation datasets  
+train\_files, train\_targets = load\_dataset('path/to/yourdata/dog\_images/train')  
+valid\_files, valid\_targets = load\_dataset('path/to/yourdata/dog\_images/valid')  
+test\_files, test\_targets = load\_dataset('path/to/yourdata/dog\_images/test')
+```
+
+After creating our function we have 6680 training images, 835 validation images and 836 test images from 133 total dog categories. Which leads to an 80/10/10 split.
+
+**Step 2: Creating a Facedetector and Dogdetector with OpenCV.**
+----------------------------------------------------------------
+
+OpenCV is a library that provides hundreds of different computer vision algorithms. We will use the OpenCV [Haar feature-based cascade classifiers](http://docs.opencv.org/trunk/d7/d8b/tutorial_py_face_detection.html), to detect human faces. In the next step, we need to download the pre-trained face detectors stored on [Github](https://github.com/opencv/opencv/tree/master/data/haarcascades). We will use the frontal face haar cascade.
+
+```
+import cv2 \# extract pre-trained face detector  
+face\_cascade = cv2.CascadeClassifier('path\_to\_haarcascade\_xml/haarcascade\_frontalface\_alt.xml')
+```
+
+After downloading and creating our face\_cascade we want to create a Face Detector:
+
+```
+\# returns "True" if face is detected in image stored at img\_path  
+def face\_detector(img\_path):  
+    img = cv2.imread(img\_path)  
+    gray = cv2.cvtColor(img, cv2.COLOR\_BGR2GRAY)  
+    faces = face\_cascade.detectMultiScale(gray)  
+    return len(faces) > 0
+```
+
+After creating our face detector we need to create a dog detector. For that we will use ResNet-50 which is a pre-trained computer vision model for image classification.
+
+```
+from keras.applications.resnet50 import ResNet50\# define ResNet50 model  
+ResNet50\_model = ResNet50(weights='imagenet')def dog\_detector(img\_path):  
+    prediction = ResNet50\_predict\_labels(img\_path)  
+    return ((prediction <= 268) & (prediction >= 151))
+```
+
+The following dog\_detector will output a label from the ResNet50 [dictionary](https://gist.github.com/yrevar/942d3a0ac09ec9e5eb3a). Between the numbers 151 and 268 is a different dog category from ‘Border collie’ up to ‘Walker foxhound’.
+
+Step 3: Create a CNN
+
+For this part, we will create a CNN from Scratch only to get a better understanding of how a CNN works and architecture could look like. The first step is to transform our images into tensors.
+
+```
+def path\_to\_tensor(img\_path):  
+    # loads RGB image as PIL.Image.Image type  
+    img = image.load\_img(img\_path, target\_size=(224, 224))  
+    # convert PIL.Image.Image type to 3D tensor with shape (224, 224, 3)  
+    x = image.img\_to\_array(img)  
+    # convert 3D tensor to 4D tensor with shape (1, 224, 224, 3) and return 4D tensor  
+    return np.expand\_dims(x, axis=0)def paths\_to\_tensor(img\_paths):  
+    list\_of\_tensors = \[path\_to\_tensor(img\_path) for img\_path in tqdm(img\_paths)\]  
+    return np.vstack(list\_of\_tensors)#we need to divide every pixel in every image by 255.  
+\# pre-process the data for Keras  
+train\_tensors = paths\_to\_tensor(train\_files).astype('float32')/255  
+valid\_tensors = paths\_to\_tensor(valid\_files).astype('float32')/255  
+test\_tensors = paths\_to\_tensor(test\_files).astype('float32')/255
+```
+
+By dividing we scale the picture to the wanted size. After the preprocessing, we go now to creat our CNN.
+
+```
+model = Sequential()model.add(Conv2D(filters=16, kernel\_size=2, input\_shape=(224, 224, 3), activation='relu'))  
+model.add(MaxPooling2D(pool\_size=2, data\_format='channels\_last'))  
+model.add(Conv2D(filters=32, kernel\_size=2, activation='relu'))  
+model.add(MaxPooling2D(pool\_size=2, data\_format='channels\_last'))  
+model.add(Conv2D(filters=64, kernel\_size=2, activation='relu'))  
+model.add(MaxPooling2D(pool\_size=2, data\_format='channels\_last'))model.add(GlobalAveragePooling2D())model.compile(optimizer='rmsprop', loss='categorical\_crossentropy', metrics=\['accuracy'\])
+```
+
+We created a very simple model that uses a relu activation function at the end of each layer and MaxPooling. We use a cross-entropy function and rmsprop as an optimizer. We train this model for 25 epochs which should be enough for a first creation. Our model has an accuracy of 1.19% which is better than random guessing 133 different breeds.
+
+Step 4: Transfer learning with Resnet to improve Accuracy
+---------------------------------------------------------
+
+As you might have guessed 1.19% accuracy isn’t that good for use in production that's why we will use ResNet and optimize it on our image dataset.
+
+```
+#Create the model  
+Resnet50\_model = Sequential()  
+Resnet50\_model.add(GlobalAveragePooling2D(input\_shape=(train\_ResNet\_50.shape\[1:\])))  
+Resnet50\_model.add(Dense(133, activation='softmax'))  
+Resnet50\_model.summary()
+```
+
+Compile the model:
+
+```
+Resnet50\_model.compile(loss='categorical\_crossentropy', optimizer='rmsprop')
+```
+
+Train the model:
+
+```
+checkpointer = ModelCheckpoint(filepath='saved\_models/weights.best.Resnet50.hdf5',   
+                               verbose=1, save\_best\_only=True)  
+Resnet50\_model.fit(train\_ResNet\_50, train\_targets,   
+          validation\_data=(valid\_ResNet\_50, valid\_targets),  
+          epochs=20, batch\_size=20, callbacks=\[checkpointer\], verbose=1)
+```
+
+After training and loading our best model we reached a test accuracy of 81.56%.
+
+Step 5: Create our dog identifier app
+-------------------------------------
+
+```
+def dog\_identification\_app(img\_path):  
+      
+    display(Image(img\_path,width=200,height=200))  
+    breed = resnet50\_prediction\_breed(img\_path)  
+    if dog\_detector(img\_path):  
+        print("Hello, dog! You look like a {}\\n".format(breed))  
+    elif face\_detector(img\_path):  
+        print("Hello, human! You look like a {}\\n".format(breed))  
+    else:  
+        print("Uhmmm You are not a dog or a human! Can you please try another picture? THANKS")
+```
+
+The input is an image that gets first displayed and then it will check with our created dog\_detector if its a dog or a human. If our input image is neither a dog or a human it will return:
+
+> Uhmmm You are not a dog or a human! Can you please try another picture? THANKS"
+
+![](https://miro.medium.com/max/1222/1*OP87soek1qmmx-n86pm_mw.png)![](https://miro.medium.com/max/936/1*t7abO8NqM4L6r1dLnSZllg.png)Output dog classifier App
+
+The above pictures showcase how our app works.
+
+Conclusion and Outlook:
+=======================
+
+Training a CNN from Scratch can be done in minutes up to hours but possibly won’t satisfy our needs. Transfer learning is for most use cases like creating a dog classifier enough.
+
+This was a pretty fun project creating a CNN from Scratch and using a simple Keras NN architecture to create an image classifier. The project performs pretty well if all parameters are good and the dog breed is in the CNN classifier.
+
+There are enough points which can be improved for example:
+
+*   the input image needs to show the front of a face but we could also use other face detection xmls from OpenCV to further improve our model.
+*   We could also improve the preprocessing with transformers and improve the performance of the model.
+*   Add options for the input image if you want a dog, cat, other animals look like.
+*   Create a simple Web app with Flask on Heroku
+
+[On my, GitHub](https://github.com/Lukas-Forst/DeepLearning/tree/master/DogBreed%20Classification) is also an approach with PyTorch with a different and more complex model architecture.
+
+If you want to see all the steps for creating the project you can see them in the following [Git repository](https://github.com/Lukas-Forst/CapStoneProject-DogClassifier):
+
+Both datasets are from [Udacity](https://www.udacity.com/)
+
+Thank you very much for taking the time to read this blog post.

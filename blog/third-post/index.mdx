@@ -1,10 +1,120 @@
 ---
-title: "Yet Another Post"
-date: "2021-07-25"
-hero_image: "./nubelson-fernandes.jpg"
-hero_image_alt: "Person reading"
-hero_image_credit_text: "Nubelson Fernandes"
-hero_image_credit_link: "https://unsplash.com/photos/ZcLV0rQ8scI"
+title: "A short step by step guide on how to approach a dataset"
+date: "2020-04-11"
+hero_image: "https://miro.medium.com/max/1400/0*K0cjfTecDggi1aec"
+hero_image_alt: "boston harbor"
+hero_image_credit_text: "Osman Rana"
+hero_image_credit_link: "https://unsplash.com/@osmanrana?utm_source=medium&utm_medium=referral"
 ---
+<br/><br/>
+<br/><br/>
+<br/><br/>
 
-Wow look at all this content. How do they do it?
+A short step by step guide on how to approach a dataset
+=======================================================
+
+[![Lukas](https://miro.medium.com/fit/c/96/96/1*oLpRXB8pWx5_bD3b83Wp0Q.jpeg)](https://medium.com/@lukas.forst?source=post_page-----333b9f56bebc-----------------------------------)
+[Lukas](https://medium.com/@lukas.forst?source=post_page-----333b9f56bebc-----------------------------------)
+
+[Apr 11, 2020](https://medium.com/analytics-vidhya/a-short-step-by-step-guide-on-how-to-approach-a-dataset-333b9f56bebc?source=post_page-----333b9f56bebc-----------------------------------) · 5 min read
+
+![](https://miro.medium.com/max/1400/0*K0cjfTecDggi1aec)Photo by [Osman Rana](https://unsplash.com/@osmanrana?utm_source=medium&utm_medium=referral) on [Unsplash](https://unsplash.com?utm_source=medium&utm_medium=referral)
+
+As someone who enjoys travel, sites like Airbnb, Tripadvisor or Hostelworld are perfect. Besides giving information about the next destination you can travel too, they also collect countless amounts of data that can be used to visualize, analyze and countless other ways to interact with the data.
+
+In this Post, we will look deeper into Airbnb listing data from Boston. The data for this insight is from [Inside Airbnb](http://insideairbnb.com/get-the-data.html). We will look closer into the listing and calendar files of the dataset.
+
+**listings** consist of 6155 rows and 106 features about the different listings of a host.
+
+**calendar** consists of 2246575 rows and 7 columns with features of the different listings at different prices on different days.
+
+After taking a brief view into the data the first questions that came to my mind were:
+
+*   What are the main price points of Airbnbs in Boston?
+*   Do public holidays or seasonality influence the price?
+*   is it possible to predict the price of an Airbnb?
+
+1\. What are the main price points of Airbnbs in Boston?
+========================================================
+
+The first step to answer the first question is to get a good look at the data. For that I like to use _pandas profiling_, which uses the whole data frame and creates a statistic about everything starting with an overview followed by the Variables, Correlations, Missing Values and a sample.
+
+The following gif shows the full report.
+
+After getting an overview of the data with the help of the pandas profiler, it’s time to create some graphs.
+
+the first heatmap only shows some columns which influence the price per night of an Airbnb. There is a slight positive correlation between price and bedroom, price and accommodates viewable.
+
+<img alt="" class="t u v ky aj" src="https://miro.medium.com/max/1320/1\*LCOuhDzBot9Peq7Wgve7Kw.png" width="660" height="707" srcSet="https://miro.medium.com/max/552/1\*LCOuhDzBot9Peq7Wgve7Kw.png 276w, https://miro.medium.com/max/1104/1\*LCOuhDzBot9Peq7Wgve7Kw.png 552w, https://miro.medium.com/max/1280/1\*LCOuhDzBot9Peq7Wgve7Kw.png 640w, https://miro.medium.com/max/1320/1\*LCOuhDzBot9Peq7Wgve7Kw.png 660w" sizes="660px" role="presentation"/>
+
+The positive correlation between price — bedrooms, price — accommodates makes sense. A property with more bedrooms should be larger than one with fewer bedrooms. A larger property is mostly more expensive. The mentioned points are also applicable to accommodate and bathrooms. One problem is with these conclusions that the neighborhood is not in the calculation. A smaller apartment in a high paying area will mostly like have fewer bedrooms and can accommodate fewer persons.
+
+To solve the mentioned problem we will look deeper into the price differences in the neighbour hoods. For that I created a heatmap with folium, which is pretty easy. You need the latitude, longitude and a parameter which you want to use for visualization. In that case I used the maximum of the price.
+
+```
+import folium  
+from folium.plugins import HeatMap  
+#the max price will be used as indicator for the color of the heatmap  
+max\_amount = float(boston\_df\['price'\].max())  
+hmap = folium.Map(location=\[42.36, -71.05\], zoom\_start=12, )  
+hm\_wide = HeatMap( list(zip(boston\_df.latitude.values, boston\_df.longitude.values, boston\_df.price.values)),  
+                   min\_opacity=0.2,  
+                   max\_val=max\_amount,  
+                   radius=17, blur=15,   
+                   max\_zoom=1,   
+                 )  
+hmap.add\_child(hm\_wide)
+```
+
+As we can see from the map the most expensive property types for the listings are Serviced Apartmens, condo and boat. A regular apartment is the most frequent listed property type after a house both have a mean price lower than 250$.
+
+<img alt="" class="t u v ky aj" src="https://miro.medium.com/max/1400/1\*K59b5S7IwsB0dGI5V7U4-Q.png" width="700" height="434" srcSet="https://miro.medium.com/max/552/1\*K59b5S7IwsB0dGI5V7U4-Q.png 276w, https://miro.medium.com/max/1104/1\*K59b5S7IwsB0dGI5V7U4-Q.png 552w, https://miro.medium.com/max/1280/1\*K59b5S7IwsB0dGI5V7U4-Q.png 640w, https://miro.medium.com/max/1400/1\*K59b5S7IwsB0dGI5V7U4-Q.png 700w" sizes="700px" role="presentation"/>
+
+2\. Do public holidays or seasonality influence the price?
+==========================================================
+
+After looking at what the most influential features of the housing price in Boston are, we want to see if the date influences the price.
+
+Solving this question we need to group the data of the listings per day by Month and Year. After the grouping we plot our findings with a simple bar chart.
+
+![](https://miro.medium.com/max/1400/1*53cPuYvit5tAgxKfGOyg4w.png)
+
+As we can see from the chart there is a seasonality in the winter months in February, March, and December in 2019, the average price was below 200$. The graph shows also that the average price starts to rise in January and February.  
+For the next part of the question we want to see the influence of public holidays on Airbnb prices. To answer this question we use the holidays package.
+
+<img alt="" class="t u v ky aj" src="https://miro.medium.com/max/1400/1\*mnQKIORnVzDAZWFmLKVrEA.png" width="700" height="395" srcSet="https://miro.medium.com/max/552/1\*mnQKIORnVzDAZWFmLKVrEA.png 276w, https://miro.medium.com/max/1104/1\*mnQKIORnVzDAZWFmLKVrEA.png 552w, https://miro.medium.com/max/1280/1\*mnQKIORnVzDAZWFmLKVrEA.png 640w, https://miro.medium.com/max/1400/1\*mnQKIORnVzDAZWFmLKVrEA.png 700w" sizes="700px" role="presentation"/>
+
+As we can see the prices around most of the holidays are over 200$, except for Christmas which is about 190$, the only real ‘outlier’ is Washington’s Birthday with an average price of 140$.
+
+3\. Is it possible to predict the price of an Airbnb?
+=====================================================
+
+With the last question we want also to get further in the Crisp-DM process. The first question answered the business and data understanding part, with the second question we went deeper into the Data understanding and started with the Data Preparation Process. Now it’s time for the modeling process and more data cleanup.
+
+The first thing we do is use pandas to get dummies to one hot encode our categorical data into numerical values for use in the modeling process. After we are done with the process, we can start with modeling.  
+We use sklearns train\_test\_split. We split our data into 80% training and 20% test data. As a metric for the performance of the model I will use the MAE, which will give a good overview of how far on average we are away from our target metric.
+
+For modeling we will create a simple linear regression model with a DecisionTreeRegressor.
+
+```
+from sklearn import tree  
+from sklearn import metricsdectree = tree.DecisionTreeRegressor(max\_depth=5,random\_state=0)  
+dectree= dectree.fit(X\_train, y\_train)  
+  
+tree\_err = metrics.median\_absolute\_error(y\_test, dectree.predict(X\_test))
+```
+
+We will get an MAE of 44.2, which means we have an average difference of 44$.
+
+Conclusion
+==========
+
+Lets briefly summarize our findings
+
+Lets briefly summarize our findings.  
+AirBnbs which are around the harbor or water in Boston is more expensive than accommodations far away from the water.  
+The larger and more bathrooms, bedrooms and people an Airbnb can house the more it costs.  
+It’s possible to create a model without much preprocessing and feature selection which comes pretty close to the cost of an Airbnb.  
+To find more about the code and other graphs you can look into the [jupyter notebook](https://github.com/Lukas-Forst/Boston_Airbnb_simple).
+
+Get the data from [http://insideairbnb.com/get-the-data.html](http://insideairbnb.com/get-the-data.html)

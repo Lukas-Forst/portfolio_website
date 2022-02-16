@@ -1,16 +1,85 @@
 ---
-title: "My First Post"
-date: "2021-07-23"
-hero_image: "./jean-van-wykh.jpg"
-hero_image_alt: "Olympia sign"
-hero_image_credit_text: "Jean van wykh"
-hero_image_credit_link: "https://unsplash.com/photos/hcG1eiYcE_A"
+title: "Movie recommendation system"
+date: "2022-01-09"
+hero_image: "https://miro.medium.com/max/1400/0*e5RzjyuUEO6oypRu"
+hero_image_alt: "empty cinema"
+hero_image_credit_text: "Felix Mooneeram"
+hero_image_credit_link: "https://unsplash.com/photos/evlkOfkQ5rE?utm_source=unsplash&utm_medium=referral&utm_content=creditShareLink"
 ---
 
-This is my first blog post! Isn't it *great*?
 
-Some of my **favorite** things are:
+![](https://miro.medium.com/max/1400/1*kNj8AqQ2YA8QmzVAGbo_bg.jpeg)
 
-* Petting dogs
-* Singing
-* Eating potato-based foods
+Movie recommendation system
+===========================
+
+
+
+![Lukas](https://miro.medium.com/fit/c/56/56/1*oLpRXB8pWx5_bD3b83Wp0Q.jpeg) [Lukas](https://medium.com/@lukas.forst?source=post_page-----ae8f5e8679dc-----------------------------------)
+
+Jan 9·3 min read
+
+
+
+I want to improve my Algorithm and Data structure Knowledge that's why I created a simple movie recommendation system using the command line and if else.  
+In the following blog post, I will guide you through a sample project you can create for your portfolio or as an Idea of how to use Data structures like a Tree, Hashmap, etc…  
+The key intention behind this blog post is to create simple projects that can be used in your portfolio to highlight your skills.  
+The main focus in this post is to use:
+
+1\. API for data  
+2\. Data structures like TreeNodes  
+3\. Command prompt
+
+The project uses [themoviedb](https://developers.themoviedb.org/3/movies/get-movie-details) API to fetch the movie data of 20 movies belonging to a certain genre. The API key can get generated after you created an account under [themoviedb](https://www.themoviedb.org/).  
+In the next step I use the json and requests library.  
+\`genres = requests.get(f”[https://api.themoviedb.org/3/genre/movie/list?api\_key={api\_key}&language=en-US](https://api.themoviedb.org/3/genre/movie/list?api_key={api_key}&language=en-US)")  
+genre\_data = genres.json()\`  
+The api data looks like the following:  
+{‘genres’: \[{‘id’: 28, ‘name’: ‘Action’},  
+{‘id’: 12, ‘name’: ‘Adventure’},  
+{‘id’: 16, ‘name’: ‘Animation’},  
+{‘id’: 35, ‘name’: ‘Comedy’},  
+{‘id’: 80, ‘name’: ‘Crime’},  
+{‘id’: 99, ‘name’: ‘Documentary’},  
+{‘id’: 18, ‘name’: ‘Drama’},  
+{‘id’: 10751, ‘name’: ‘Family’},  
+{‘id’: 14, ‘name’: ‘Fantasy’},  
+{‘id’: 36, ‘name’: ‘History’},  
+{‘id’: 27, ‘name’: ‘Horror’},  
+{‘id’: 10402, ‘name’: ‘Music’},  
+{‘id’: 9648, ‘name’: ‘Mystery’},  
+{‘id’: 10749, ‘name’: ‘Romance’},  
+{‘id’: 878, ‘name’: ‘Science Fiction’},  
+{‘id’: 10770, ‘name’: ‘TV Movie’},  
+{‘id’: 53, ‘name’: ‘Thriller’},  
+{‘id’: 10752, ‘name’: ‘War’},  
+{‘id’: 37, ‘name’: ‘Western’}\]}
+
+Through the API we got all available genres in the next step we use the genres to collect 20 movies from each genre.
+
+\`\`\`  
+data = \[\]  
+for genre in genre\_name:  
+r = requests.get(f”[https://api.themoviedb.org/3/discover/movie?api\_key={api\_key}&language=en-US&sort\_by=popularity.desc&include\_adult=false&include\_video=false&page=1&with\_genres={genre}&with\_watch\_monetization\_types=flatrate](https://api.themoviedb.org/3/discover/movie?api_key={api_key}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_genres={genre}&with_watch_monetization_types=flatrate)")  
+movie\_data = r.json()  
+  
+for i in movie\_data\[‘results’\]:  
+movie\_temp = \[\]  
+movie = \[i\[‘title’\],i\[‘vote\_average’\],i\[‘release\_date’\],i\[‘popularity’\],i\[‘overview’\], genre\]  
+movie\_temp.append(movie)  
+data += movie\_temp  
+\`\`\`
+
+genre\_name is a list containing all genres. We iterate over each genre and change the API key according to that. In the next step, we iterate over the API result and place it in a list of lists that get appended to data. The resulting list of list looks like the following:
+
+\[\[‘Spider-Man: No Way Home’, 8.6, ‘2021–12–15’, 20686.826, ‘Peter Parker is unmasked and no longer able to separate…’, ‘Action’\],  
+\[‘Venom: Let There Be Carnage’, 7.2, ‘2021–09–30’, 7992.617, ‘After finding a host body in investigative reporter Eddie Brock,…’, ‘Action’\]\]
+
+After getting the data and saving it in video\_data.py we create a simple TreeNode class that will be used as a data structure for the project. The tree is simple and contains a start node and a node for each genre. Each genre node contains 20 movies which add up to 380 Nodes from the 19 genres.
+
+The next step is to get the user input and the information of what genre he wants to watch. The user has several methods to select the movie. The first way is using a number from 1–19 or writing the genre into the command line.  
+The user gets asked after that if he wants to see movies from the selected genre. After that, he gets prompted again to get the amount of recommended movies. In the end, the user can get another recommendation or quit the recommendation sys.
+
+Thank you very much for your time and have fun exploring my [github](https://github.com/Lukas-Forst/Movie_rec_sys) repository and feedback of any sort is welcomed.
+
+cover image from [unsplash](https://unsplash.com/photos/evlkOfkQ5rE?utm_source=unsplash&utm_medium=referral&utm_content=creditShareLink)
