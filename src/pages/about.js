@@ -1,7 +1,5 @@
 import * as React from 'react'
 import * as Style from './about.module.css'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-//import { fagithub } from '@fortawesome/free-solid-svg-icons'
 import { StaticImage } from 'gatsby-plugin-image'
 
 import {Link} from 'gatsby'
@@ -14,21 +12,20 @@ const AboutPage = () => {
       <div className='row text-center'>
         
           <div className='col-sm'>
-            <p>Github</p>
-            <FontAwesomeIcon icon="fa-brands fa-github-alt" />
-            <Link href="https://github.com/lukas-forst"><StaticImage style={{borderRadius:"55px", maxHeight: 'calc(50vh - 4rem)' }} className={Style.socialimage} src="../img/github.png" /></Link>
+            <Link href="https://github.com/lukas-forst" aria-label="GitHub profile"><StaticImage style={{borderRadius:"55px", maxHeight: 'calc(50vh - 4rem)' }} className={Style.socialimage} src="../img/github.png" /></Link>
+            <p style={{color: "white"}}><br/>Github</p>
           </div>
           <div className='col-sm'>
-            <p>LinkedIn</p>
-            <Link href="https://www.linkedin.com/in/lukasforst/"><StaticImage style={{borderRadius:"25px" }} className={Style.socialimage} src="../img/linkedin.png" /></Link>
+            <Link href="https://www.linkedin.com/in/lukasforst/" aria-label="LinkedIn profile"><StaticImage style={{borderRadius:"25px" }} className={Style.socialimage} src="../img/linkedin.png" /></Link>
+            <p style={{color: "white"}}><br/>LinkedIn</p>
           </div>
           <div className='col-sm'>
-            <p>Medium</p>
-            <Link href="https://medium.com/@lukas.forst"><StaticImage style={{borderRadius:"25px" }} className={Style.socialimage} src="../img/medium.png" /></Link>
+            <Link href="https://medium.com/@lukas.forst" aria-label="Medium profile"><StaticImage style={{borderRadius:"25px" }} className={Style.socialimage} src="../img/medium.png" /></Link>
+            <p style={{color: "white"}}><br/>Medium</p>
           </div>
           <div className='col-sm'>
-            <p>Tableau Public</p>
-            <Link href="https://public.tableau.com/app/profile/lukas.forst"><StaticImage style={{borderRadius:"25px" }} className={Style.socialimage} src="../img/tableau.png" /></Link>
+            <Link href="https://public.tableau.com/app/profile/lukas.forst" aria-label="Tableau public profile"><StaticImage style={{borderRadius:"25px" }} className={Style.socialimage} src="../img/tableau.png" /></Link>
+            <p style={{color: "white"}}><br/>Tableau Public</p>
           </div>
        
       </div>
