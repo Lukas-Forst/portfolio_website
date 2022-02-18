@@ -8,7 +8,7 @@ const BlogPage = ({ data }) => {
     <div style={{background:"#09273d", height:"100vh"}}>
     <Helmet>
           
-          <meta charSet="utf-8" name="personal portfolio site to highlight projects"/>
+          <meta charSet="utf-8" name="description" content="personal portfolio site to highlight projects"/>
           <title>Lukas Forst</title>
           <link rel="canonical" href="http://mysite.com/example" />
           <html lang="en" />

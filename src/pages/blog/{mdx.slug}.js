@@ -1,15 +1,20 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
 import { MDXRenderer } from 'gatsby-plugin-mdx'
-import { StaticImage } from 'gatsby-plugin-image'
-import Layout from '../../components/layout'
+import { Helmet } from "react-helmet"
 
 import Header from '../../components/header'
 
 const BlogPost = ({ data }) => {
   //const image = getImage(data.mdx.frontmatter.hero_image)
   return (
-    <div>
+    <div style={{background:"#09273d", color: "white", textDecoration: "none"}}>
+      <Helmet>
+          <meta charSet="utf-8" name="description" content={data.mdx.frontmatter.title}/>
+          <title>{data.mdx.frontmatter.title}</title>
+          <link rel="canonical" href="http://mysite.com/example" />
+          <html lang="en" />
+        </Helmet>
     <Header siteTitle={data.mdx.frontmatter.title}>{data.mdx.frontmatter.title}</Header>
     <div className='container'>
       <MDXRenderer>

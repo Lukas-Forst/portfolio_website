@@ -16,7 +16,7 @@ const Project = () => (
         </div>
   <div className="row row-cols-2">
     <div className="col">
-    <Link to="https://github.com/Lukas-Forst/Movie_rec_sys" className="nav-link" activeClassName="active">
+    <Link to="https://github.com/Lukas-Forst/Python" className="nav-link" activeClassName="active">
       <div className={classNames([card, card1])}>
         <h3>Python projects</h3>
         <p>Collection of python projects containing simple projects like a time calculator upto a budget app.</p>
