@@ -1,0 +1,92 @@
+---
+import '../styles/global.css'
+import { socials } from '../data/site'
+
+interface Props {
+  title: string
+  description?: string
+}
+
+const { title, description } = Astro.props
+const siteUrl = Astro.site ?? new URL('https://lukasforst.dev')
+const fullTitle = title === 'Lukas Forst' ? title : `${title} · Lukas Forst`
+const desc =
+  description ?? 'Lukas Forst — business computer science graduate writing about data science, analytics, and building things.'
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={desc} />
+    <link rel="canonical" href={new URL(Astro.url.pathname, siteUrl).href} />
+    <link rel="alternate" type="application/rss+xml" title="Lukas Forst" href={new URL('rss.xml', siteUrl).href} />
+    <link rel="icon" href="/favicon.svg" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={desc} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={new URL(Astro.url.pathname, siteUrl).href} />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+
+    <!-- Dark mode: avoid FOUC by setting the class before first paint -->
+    <script is:inline>
+      const stored = localStorage.getItem('theme')
+      const dark = stored
+        ? stored === 'dark'
+        : window.matchMedia('(prefers-color-scheme: dark)').matches
+      document.documentElement.classList.toggle('dark', dark)
+    </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container site-header-inner">
+        <a href="/" class="site-brand">Lukas Forst</a>
+        <nav class="site-nav">
+          <a href="/blog">Blog</a>
+          <a href="/#projects">Projects</a>
+          <a href="/#about">About</a>
+          <button
+            class="theme-toggle"
+            type="button"
+            aria-label="Toggle dark mode"
+            title="Toggle dark mode"
+          >
+            <span class="toggle-icon">◐</span>
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <span>© {new Date().getFullYear()} Lukas Forst</span>
+        <nav class="site-nav">
+          {socials.map((s) => <a href={s.url} rel="noopener">{s.name}</a>)}
+        </nav>
+      </div>
+    </footer>
+
+    <script>
+      const button = document.querySelector<HTMLButtonElement>('.theme-toggle')
+      button?.addEventListener('click', () => {
+        const isDark = document.documentElement.classList.toggle('dark')
+        localStorage.setItem('theme', isDark ? 'dark' : 'light')
+      })
+    </script>
+  </body>
+</html>

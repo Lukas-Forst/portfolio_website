@@ -1,0 +1,77 @@
+---
+import Base from '../../layouts/Base.astro'
+import { getCollection, render } from 'astro:content'
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog')
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }))
+}
+
+const { post } = Astro.props
+const { Content } = await render(post)
+
+const fmt = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+})
+const siteUrl = Astro.site ?? new URL('https://lukasforst.dev')
+---
+
+<Base title={post.data.title} description={post.data.description}>
+  <article class="container">
+    <header style="padding-top: 3rem">
+      <a href="/blog" style="font-size: 0.9rem">← Blog</a>
+      <h1 style="font-size: clamp(1.8rem, 5vw, 2.6rem); margin: 0.75rem 0 0.5rem">
+        {post.data.title}
+      </h1>
+      <time
+        datetime={post.data.pubDate.toISOString()}
+        style="color: var(--muted); font-size: 0.95rem"
+      >
+        {fmt.format(post.data.pubDate)}
+      </time>
+      {post.data.tags.length > 0 && (
+        <div style="display: flex; gap: 0.5rem; margin-top: 0.75rem; flex-wrap: wrap">
+          {post.data.tags.map((t) => <span class="chip">{t}</span>)}
+        </div>
+      )}
+    </header>
+
+    {
+      post.data.heroImage && (
+        <>
+          <img
+            class="post-hero"
+            src={post.data.heroImage}
+            alt={post.data.heroImageAlt ?? ''}
+            width="1200"
+            height="675"
+            loading="eager"
+          />
+          {post.data.heroImageCredit && (
+            <p class="credit">
+              Photo by{' '}
+              <a href={post.data.heroImageCreditUrl} rel="noopener">
+                {post.data.heroImageCredit}
+              </a>{' '}
+              on <a href="https://unsplash.com">Unsplash</a>
+            </p>
+          )}
+        </>
+      )
+    }
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    <hr style="margin: 3rem 0 2rem; border: none; border-top: 1px solid var(--border)" />
+    <p>
+      <a href="/blog">← Back to all posts</a>
+    </p>
+  </article>
+</Base>
