@@ -1,17 +1,59 @@
-## Portfolio Website
+# lukasforst.dev
 
-The website is used to highlight some projects I created, besides highlighting projects it also acts as a personal blog with posts I created on Medium and dev.to
+Personal portfolio + blog, built with [Astro](https://astro.build).
 
-This Website is created with [Gatsby](https://www.gatsbyjs.com) and React-Bootstrap.
+Previously a Gatsby site (see git history for the old `main`); reworked onto
+Astro with the content carried over and cleaned up.
 
+## Stack
 
-<div>
-      <p>Icons from</p>
-      <a href="https://www.flaticon.com/free-icons/python-file" title="python file icons">Python file icons created by Flat Icons - Flaticon</a>
-      <a href="https://www.flaticon.com/de/kostenlose-icons/schiefer" title="schiefer Icons">Schiefer Icons erstellt von Eucalyp - Flaticon</a>
-      <a href="https://www.flaticon.com/de/kostenlose-icons/graph" title="graph Icons">Graph Icons erstellt von Eucalyp - Flaticon</a>
-      <a href="https://www.flaticon.com/free-icons/deep-learning" title="deep learning icons">Deep learning icons created by Becris - Flaticon</a>
-      <a href="https://www.flaticon.com/free-icons/medium" title="medium icons">Medium icons created by Freepik - Flaticon</a>
-      <a href="https://www.flaticon.com/de/kostenlose-icons/linkedin" title="linkedin Icons">Linkedin Icons erstellt von Google - Flaticon</a>
-      <a href="https://icons8.com/icons/set/tableau-public" title="tableau icons">Tableau icon created by icons8</a>
- </div>
+- **Astro 7** — static output, zero JS by default
+- **MDX-ready content collections** — posts live in `src/content/blog/`
+- **Shiki** dual-theme code highlighting (light/dark)
+- Sitemap + RSS generated at build
+
+## Writing
+
+Create a new post by adding `src/content/blog/my-post.md`:
+
+```markdown
+---
+title: "My post"
+description: "One-line summary for list pages and RSS."
+pubDate: 2026-08-30
+heroImage: /images/my-hero.jpg
+heroImageAlt: "describe the image"
+heroImageCredit: "Photographer"
+heroImageCreditUrl: "https://unsplash.com/@photographer"
+tags: ["tag"]
+---
+
+Content in Markdown…
+```
+
+## Commands
+
+| Command           | Action                                       |
+| ----------------- | -------------------------------------------- |
+| `npm install`     | Install dependencies                         |
+| `npm run dev`     | Start dev server at `localhost:4321`         |
+| `npm run build`   | Build the production site to `./dist/`       |
+| `npm run preview` | Preview the production build locally         |
+
+## Deploy (Vercel)
+
+1. Import the repo on Vercel — the Astro preset is detected automatically.
+2. Build command `npm run build`, output directory `dist`.
+3. Add your domain under *Settings → Domains* and point DNS at Vercel.
+
+The canonical site URL lives in `astro.config.mjs` (`site:`) — update it if
+the domain differs from `lukasforst.dev`; it feeds the sitemap, RSS, and
+canonical tags.
+
+## Credits
+
+- Cover images from [Unsplash](https://unsplash.com) (see each post's credit
+  line): Felix Mooneeram, Matthew Henry, Osman Rana, Jean van Wykh, Leon
+  Rohrwild, Nubelson Fernandes.
+- Icons from Flaticon (original Gatsby era) — attribution kept in git
+  history on the pre-rework `main` branch README.

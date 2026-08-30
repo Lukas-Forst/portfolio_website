@@ -1,0 +1,77 @@
+---
+import Base from '../layouts/Base.astro'
+import { getCollection } from 'astro:content'
+import { projects } from '../data/site'
+
+const posts = (await getCollection('blog'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 4)
+
+const fmt = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+})
+---
+
+<Base title="Lukas Forst">
+  <section class="hero container">
+    <h1>Hi, I'm Lukas.</h1>
+    <p class="subtitle">
+      Business computer science graduate interested in anything related to data
+      science, analytics and visualization. I enjoy photography, coding,
+      learning, and any form of exercise.
+    </p>
+  </section>
+
+  <section class="section container" id="writing">
+    <div class="section-heading">
+      <h2>Writing</h2>
+    </div>
+    {posts.map((post) => (
+      <div class="post-item">
+        <time datetime={post.data.pubDate.toISOString()}>
+          {fmt.format(post.data.pubDate)}
+        </time>
+        <a href={`/blog/${post.id}/`}>{post.data.title}</a>
+      </div>
+    ))}
+    <p style="margin-top: 1.25rem">
+      <a href="/blog">All posts →</a>
+    </p>
+  </section>
+
+  <section class="section container-wide" id="projects">
+    <div class="section-heading">
+      <h2>Projects</h2>
+      <span class="chip">{projects.length}</span>
+    </div>
+    <div class="card-grid">
+      {projects.map((p) => (
+        <a class="card" href={p.url} rel="noopener">
+          <h3>{p.title}</h3>
+          <p>{p.description}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="section container" id="about">
+    <div class="section-heading">
+      <h2>About</h2>
+    </div>
+    <p>
+      I'm a business computer science graduate working on
+      <a href="https://github.com/Lukas-Forst/coffee-lens" rel="noopener">Roast Lens</a>,
+      a coffee tracking app, and writing about data projects along the way.
+      Previously: data analysis and deep learning experiments, from Boston
+      Airbnb data to dog breed classifiers.
+    </p>
+    <p>
+      The best way to reach me is
+      <a href="https://www.linkedin.com/in/lukasforst/" rel="noopener">LinkedIn</a>
+      — or find me on GitHub where most of my work lives.
+    </p>
+  </section>
+</Base>
