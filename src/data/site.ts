@@ -10,7 +10,7 @@ export const projects = [
     title: 'Roast Lens',
     description:
       'Coffee tracking PWA: bean library, brew history, freshness tracking, and a community feed. Vue 3, Supabase, PWA.',
-    url: 'https://github.com/Lukas-Forst/coffee-lens',
+    url: 'https://www.roast-lens.com',
   },
   {
     title: 'Python projects',
