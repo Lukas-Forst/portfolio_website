@@ -283,9 +283,14 @@ code {
 /* Post page */
 .post-hero {
   border-radius: 16px;
-  width: 100%;
+  /* break out of the 44rem text column, up to 60rem */
+  width: min(60rem, 100vw - 2rem);
+  max-width: none;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
   margin: 1.5rem 0 0.5rem;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 2 / 1;
   object-fit: cover;
 }
 .credit {
