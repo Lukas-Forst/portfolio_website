@@ -21,7 +21,7 @@ Create a new post by adding `src/content/blog/my-post.md`:
 title: "My post"
 description: "One-line summary for list pages and RSS."
 pubDate: 2026-08-30
-heroImage: /images/my-hero.jpg
+heroImage: ../../assets/blog/my-hero.jpg
 heroImageAlt: "describe the image"
 heroImageCredit: "Photographer"
 heroImageCreditUrl: "https://unsplash.com/@photographer"

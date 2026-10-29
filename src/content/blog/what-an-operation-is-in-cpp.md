@@ -2,7 +2,7 @@
 title: "What an operation actually is in C++"
 description: "The three roles in 2 + 3 (operands, operator, return value), why std::cout << 5 counts as an operation too, and why a literal and a variable can produce the same output."
 pubDate: 2026-10-29
-heroImage: /images/cpp-operation.svg
+heroImage: ../../assets/blog/cpp-operation.svg
 heroImageAlt: "Diagram: operands 2 and 3 flow into the operator +, which produces the return value 5"
 tags: ["c++", "learncpp", "basics"]
 ---

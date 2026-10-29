@@ -2,7 +2,7 @@
 title: "Movie recommendation system"
 description: "Building a simple command-line movie recommendation system with Python, the themoviedb API, and tree data structures."
 pubDate: 2022-01-09
-heroImage: /images/movie-rec-sys.jpg
+heroImage: ../../assets/blog/movie-rec-sys.jpg
 heroImageAlt: "empty cinema"
 heroImageCredit: "Felix Mooneeram"
 heroImageCreditUrl: "https://unsplash.com/photos/evlkOfkQ5rE"

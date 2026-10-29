@@ -1,17 +1,22 @@
 ---
+import '@fontsource-variable/space-grotesk'
+import '@fontsource-variable/jetbrains-mono'
 import '../styles/global.css'
 import { socials } from '../data/site'
 
 interface Props {
   title: string
   description?: string
+  image?: string
+  article?: { published: Date }
 }
 
-const { title, description } = Astro.props
+const { title, description, image, article } = Astro.props
 const siteUrl = Astro.site ?? new URL('https://lukasforst.dev')
 const fullTitle = title === 'Lukas Forst' ? title : `${title} · Lukas Forst`
 const desc =
   description ?? 'Lukas Forst — business computer science graduate writing about data science, analytics, and building things.'
+const ogImage = new URL(image ?? '/og-default.png', siteUrl).href
 ---
 
 <!doctype html>
@@ -28,16 +33,11 @@ const desc =
     <!-- Open Graph -->
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={desc} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={article ? 'article' : 'website'} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    {article && <meta property="article:published_time" content={article.published.toISOString()} />}
     <meta property="og:url" content={new URL(Astro.url.pathname, siteUrl).href} />
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-    />
 
     <!-- Dark mode: avoid FOUC by setting the class before first paint -->
     <script is:inline>
@@ -49,6 +49,7 @@ const desc =
     </script>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header">
       <div class="container site-header-inner">
         <a href="/" class="site-brand">Lukas Forst</a>
@@ -68,7 +69,7 @@ const desc =
       </div>
     </header>
 
-    <main>
+    <main id="main">
       <slot />
     </main>
 

@@ -38,7 +38,7 @@ html.dark {
 
 body {
   margin: 0;
-  font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  font-family: 'Space Grotesk Variable', system-ui, -apple-system, sans-serif;
   background: var(--bg);
   color: var(--text);
   line-height: 1.7;
@@ -124,7 +124,7 @@ a:hover {
   margin: 1.5rem 0;
 }
 code {
-  font-family: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  font-family: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
 }
 :not(pre) > code {
   background: var(--code-bg);
@@ -309,4 +309,35 @@ code {
 }
 .site-footer a {
   color: var(--text-soft);
+}
+/* a11y + post navigation */
+.skip-link {
+  position: absolute;
+  left: -999px;
+}
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+  z-index: 10;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+.prose :is(h2, h3) > a {
+  color: inherit;
+  text-decoration: none;
+}
+.prose :is(h2, h3) > a:hover {
+  text-decoration: underline;
+}
+.post-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
 }

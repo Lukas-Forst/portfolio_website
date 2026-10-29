@@ -2,7 +2,7 @@
 title: "A short step-by-step guide on how to approach a dataset"
 description: "A practical walkthrough of the Boston Airbnb dataset: profiling, price drivers, seasonality, and a first price model."
 pubDate: 2020-04-11
-heroImage: /images/boston-airbnb.jpg
+heroImage: ../../assets/blog/boston-airbnb.jpg
 heroImageAlt: "boston harbor"
 heroImageCredit: "Osman Rana"
 heroImageCreditUrl: "https://unsplash.com/@osmanrana"
@@ -30,7 +30,7 @@ After getting an overview with the profiler, it's time to create some graphs.
 
 The first heatmap shows the columns that influence the price per night. There's a slight positive correlation between price and bedrooms, and between price and accommodates.
 
-![Heatmap of features correlated with price](/images/airbnb-heatmap-features.png)
+![Heatmap of features correlated with price](../../assets/blog/airbnb-heatmap-features.png)
 
 The positive correlations between price–bedrooms and price–accommodates make sense: a property with more bedrooms should be larger, and a larger property is mostly more expensive. The same applies to accommodates and bathrooms. One problem with these conclusions: the neighborhood isn't part of the calculation. A smaller apartment in a high-paying area will likely have fewer bedrooms and accommodate fewer people.
 
@@ -57,7 +57,7 @@ hmap.add_child(hm_wide)
 
 As the map shows, the most expensive property types are serviced apartments, condos and boats. A regular apartment is the most frequently listed property type after houses — both have a mean price below $250.
 
-![Property types by price](/images/airbnb-property-prices.png)
+![Property types by price](../../assets/blog/airbnb-property-prices.png)
 
 ## 2. Do public holidays or seasonality influence the price?
 
@@ -65,13 +65,13 @@ Next we want to see whether the date influences the price.
 
 To answer this, we group the listing data by day, month and year, and plot the findings with a simple bar chart.
 
-![Average price per month](/images/airbnb-monthly-prices.png)
+![Average price per month](../../assets/blog/airbnb-monthly-prices.png)
 
 The chart shows seasonality in the winter months: in February, March and December 2019, the average price was below $200. The average price starts to rise in January and February.
 
 For the second part of the question — the influence of public holidays — we use the `holidays` package.
 
-![Average price around public holidays](/images/airbnb-holiday-prices.png)
+![Average price around public holidays](../../assets/blog/airbnb-holiday-prices.png)
 
 Prices around most holidays are above $200, except Christmas, which sits at about $190. The only real outlier is Washington's Birthday, with an average price of $140.
 

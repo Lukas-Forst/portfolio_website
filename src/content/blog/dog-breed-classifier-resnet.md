@@ -2,7 +2,7 @@
 title: "A simple approach to a dog breed classifier with ResNet"
 description: "Building a dog breed classifier with a CNN from scratch and transfer learning with ResNet-50 — plus a human look-alike detector."
 pubDate: 2020-04-22
-heroImage: /images/dog-breed-classifier.jpg
+heroImage: ../../assets/blog/dog-breed-classifier.jpg
 heroImageAlt: "sad looking Pug inside a blanket"
 heroImageCredit: "Matthew Henry"
 heroImageCreditUrl: "https://unsplash.com/@matthewhenry"
