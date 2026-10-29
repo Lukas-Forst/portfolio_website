@@ -6,8 +6,7 @@ import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 
 // https://astro.build/config
 export default defineConfig({
-  // TODO: confirm the production domain before launch (used for sitemap,
-  // RSS, canonical URLs, and Open Graph tags).
+  // Production domain (used for sitemap, RSS, canonical URLs, Open Graph tags).
   site: 'https://lukasforst.dev',
   integrations: [mdx(), sitemap()],
   markdown: {
