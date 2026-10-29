@@ -290,7 +290,7 @@ code {
   left: 50%;
   transform: translateX(-50%);
   margin: 1.5rem 0 0.5rem;
-  aspect-ratio: 2 / 1;
+  aspect-ratio: 5 / 2;
   object-fit: cover;
 }
 .credit {
