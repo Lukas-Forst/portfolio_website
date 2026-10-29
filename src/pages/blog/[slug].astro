@@ -34,21 +34,18 @@ const ogImage = hero && hero.format !== 'svg' ? hero.src : undefined
   article={{ published: post.data.pubDate }}
 >
   <article class="container">
-    <header style="padding-top: 3rem">
-      <a href="/blog" style="font-size: 0.9rem">← Blog</a>
-      <h1 style="font-size: clamp(1.8rem, 5vw, 2.6rem); margin: 0.75rem 0 0.5rem">
+    <header class="page-top">
+      <a href="/blog" class="small">← Blog</a>
+      <h1 class="post-title">
         {post.data.title}
       </h1>
-      <time
-        datetime={post.data.pubDate.toISOString()}
-        style="color: var(--muted); font-size: 0.95rem"
-      >
+      <time class="meta" datetime={post.data.pubDate.toISOString()}>
         {fmt.format(post.data.pubDate)}
       </time>
-      <span style="color: var(--muted); font-size: 0.95rem"> · {minutes} min read</span>
+      <span class="meta"> · {minutes} min read</span>
       {post.data.tags.length > 0 && (
-        <div style="display: flex; gap: 0.5rem; margin-top: 0.75rem; flex-wrap: wrap">
-          {post.data.tags.map((t) => <span class="chip">{t}</span>)}
+        <div class="tag-row">
+          {post.data.tags.map((t) => <a class="chip" href={`/tags/${encodeURIComponent(t)}/`}>{t}</a>)}
         </div>
       )}
     </header>
@@ -81,7 +78,7 @@ const ogImage = hero && hero.format !== 'svg' ? hero.src : undefined
       <Content />
     </div>
 
-    <hr style="margin: 3rem 0 2rem; border: none; border-top: 1px solid var(--border)" />
+    <hr class="post-end" />
     <nav class="post-nav">
       {prev ? <a href={`/blog/${prev.id}/`}>← {prev.data.title}</a> : <span />}
       {next ? <a href={`/blog/${next.id}/`}>{next.data.title} →</a> : <span />}

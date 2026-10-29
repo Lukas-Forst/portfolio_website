@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro'
 import { getCollection } from 'astro:content'
+import PostList from '../components/PostList.astro'
 import { projects } from '../data/site'
 
 const posts = (await getCollection('blog'))
@@ -8,11 +9,6 @@ const posts = (await getCollection('blog'))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 4)
 
-const fmt = new Intl.DateTimeFormat('en-US', {
-  year: 'numeric',
-  month: 'short',
-  day: 'numeric',
-})
 ---
 
 <Base title="Lukas Forst">
@@ -29,15 +25,8 @@ const fmt = new Intl.DateTimeFormat('en-US', {
     <div class="section-heading">
       <h2>Writing</h2>
     </div>
-    {posts.map((post) => (
-      <div class="post-item">
-        <time datetime={post.data.pubDate.toISOString()}>
-          {fmt.format(post.data.pubDate)}
-        </time>
-        <a href={`/blog/${post.id}/`}>{post.data.title}</a>
-      </div>
-    ))}
-    <p style="margin-top: 1.25rem">
+    <PostList posts={posts} />
+    <p class="more">
       <a href="/blog">All posts →</a>
     </p>
   </section>
@@ -48,8 +37,8 @@ const fmt = new Intl.DateTimeFormat('en-US', {
       <span class="chip">{projects.length}</span>
     </div>
     <div class="card-grid">
-      {projects.map((p) => (
-        <a class="card" href={p.url} rel="noopener">
+      {projects.map((p, i) => (
+        <a class={i === 0 ? 'card featured' : 'card'} href={p.url} rel="noopener">
           <h3>{p.title}</h3>
           <p>{p.description}</p>
         </a>
